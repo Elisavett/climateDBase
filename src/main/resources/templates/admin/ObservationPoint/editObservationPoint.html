@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <span th:replace="shared/headers"></span>
+</head>
+<header>
+    <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
+</header>
+<body>
+<div class="container">
+    <form hidden id="deleteForm" method="post" th:action="'/admin/deleteObservationPoint/' + ${observationPoint.getId()}">
+    </form>
+    <form class="forma" action="#" th:action="@{/admin/editObservationPoint}" th:object="${observationPoint}" method="post">
+        <h2>Редактирование пункта наблюдений</h2>
+        <input class="form-control" type="hidden" th:attr="value=*{id}" id="observationPoint_id" name="observationPoint_id">
+        <a href="#" onclick="submitForm()">Удалить пункт наблюдений</a>
+        <div class="form-group">
+            <label for="name">Название</label>
+            <div class="validation" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+            <input class="form-control" type="text" th:field="*{name}" id="name" placeholder="Введите название..">
+        </div>
+        <div class="form-group">
+            <label for="description">Описание</label>
+            <div class="validation" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Name Error</div>
+            <textarea class="form-control" rows="3" cols="60" th:field="*{description}" id="description" placeholder="Введите описание.."></textarea>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Принять">
+    </form>
+</div>
+</body>
+<script type="text/javascript">
+    function submitForm(){
+        var answer = confirm('Вы уверены что хотите удалить пункт наблюдений?');
+        if(answer) {
+            $('#deleteForm').submit();
+        }
+    }
+</script>
+</html>

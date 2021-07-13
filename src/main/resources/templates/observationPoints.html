@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <span th:replace="shared/headers"></span>
+    <style>
+        a.tablePoints{
+            color: black;
+        }
+    </style>
+</head>
+<header>
+    <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
+</header>
+<body>
+<div class="container" th:switch="${observationPoints}">
+    <h2 th:case="null">No users found!</h2>
+    <div th:case="*">
+        <h1>Пункты наблюдений</h1>
+        <div sec:authorize="hasAuthority('admin')" class="form-group">
+            <a href="/admin/addObservationPoint">Добавить пункт наблюдения</a>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Пункт наблюдений
+                </th>
+                <th>
+                    Средство измерения
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <span th:each="observationPoint : ${observationPoints}">
+                <tr th:with="size = ${observationPoint.getMeasuringInstruments().size()}">
+                    <th sec:authorize="hasAuthority('admin')" th:rowspan="${size>0?size+1:2}">
+                        <a class="tablePoints" title="Редактировать" th:href="@{/admin/editObservationPoint/{id}(id=${observationPoint.getId()})}" th:text='${observationPoint.getName()}'></a>
+                    </th>
+                    <th sec:authorize="!isAuthenticated()" th:rowspan="${size>0?size:1}">
+                        <span  th:text='${observationPoint.getName()}'></span>
+                    </th>
+                    <td>
+                        <a class="tablePoints" sec:authorize="hasAuthority('admin')" th:if="${size}" title="Редактировать" th:href="@{/admin/editMeasuringInstrument/{id}(id=${observationPoint.getMeasuringInstruments().get(0).getId()})}" th:text="${observationPoint.getMeasuringInstruments().get(0).getName()}"></a>
+                        <span sec:authorize="!isAuthenticated()" th:if="${size}" th:text="${observationPoint.getMeasuringInstruments().get(0).getName()}"></span>
+                        <span sec:authorize="!isAuthenticated()"  th:unless="${size}">-</span>
+                    </td>
+<!--                <td th:rowspan="${size>0?size:1}" sec:authorize="hasAuthority('admin')">
+                        <a th:href="@{/admin/editObservationPoint/{id}(id=${observationPoint.getId()})}">Редактировать</a> |
+                        <a th:href="@{/admin/deleteObservationPoint/{id}(id=${observationPoint.getId()})}">Удалить</a>
+                    </td>-->
+                </tr>
+                <tr th:each="measuringInstrument,iterStat : ${observationPoint.getMeasuringInstruments()}" th:if="${iterStat.index>0}">
+                    <td>
+                        <a class="tablePoints" sec:authorize="hasAuthority('admin')" title="Редактировать" th:href="@{/admin/editMeasuringInstrument/{id}(id=${measuringInstrument.getId()})}" th:text='${measuringInstrument.getName()}'></a>
+                        <span sec:authorize="!isAuthenticated()" th:text='${measuringInstrument.getName()}'></span>
+                    </td>
+                </tr>
+                <tr sec:authorize="hasAuthority('admin')">
+                     <td>
+                        <a th:href="@{/admin/addMeasuringInstrumentToObsPoint/{obsPointId}(obsPointId=${observationPoint.getId()})}">Добавить новое средство измерения</a>
+                     </td>
+                </tr>
+            </span>
+        </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

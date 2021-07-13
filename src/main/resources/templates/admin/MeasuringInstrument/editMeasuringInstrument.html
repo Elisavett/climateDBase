@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <span th:replace="shared/headers"></span>
+</head>
+<header>
+    <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
+</header>
+<body>
+<div class="container">
+    <form hidden id="deleteForm" method="post" th:action="'/admin/deleteMeasuringInstrument/' + ${measuringInstrument.getId()}">
+    </form>
+    <form class="forma" action="#" th:action="@{/admin/editMeasuringInstrument}" th:object="${measuringInstrument}" method="post">
+        <h2>Редактирование средства измерения</h2>
+        <a href="#" onclick="submitForm()">Удалить средство измерения</a>
+        <input class="form-control" type="hidden" th:attr="value=*{id}" id="measuringInstrument_id" name="measuringInstrument_id">
+        <input class="form-control" type="hidden" th:attr="value=*{physicalQuantity!=null?physicalQuantity.getId():0}" id="physicalQuantityId" name="physicalQuantityId">
+
+        <div class="form-group">
+            <label for="name">Название</label>
+            <div class="validation" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+            <input class="form-control" type="text" th:field="*{name}" id="name" placeholder="Введите название..">
+        </div>
+        <div class="form-group">
+            <label for="description">Описание</label>
+            <div class="validation" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Name Error</div>
+            <textarea class="form-control" rows="3" cols="60" th:field="*{description}" id="description" placeholder="Введите описание.."></textarea>
+        </div>
+        <div class="form-group">
+            <select id="observationPointId" name="observationPointId" class="form-control">
+                <option th:each="observationPoint : ${observationPoints}"
+                        th:value="${observationPoint.getId()}"
+                        th:text="${observationPoint.getName()}"
+                        th:selected="${observationPoint.getName() == measuringInstrument.getObservationPoint().getName()}"></option>
+            </select>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Принять">
+    </form>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    function submitForm(){
+        var answer = confirm('Вы уверены что хотите удалить средство измерения?');
+        if(answer) {
+            $('#deleteForm').submit();
+        }
+    }
+</script>

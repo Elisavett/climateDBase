@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <span th:replace="shared/headers"></span>
+</head>
+<body>
+<header>
+    <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
+</header>
+<div class="container">
+
+<form class="forma" action="/auth/registration" th:object="${user}" method="POST" enctype="utf8">
+    <h2>Регистрация</h2>
+    <div class="form-group">
+        <label>Логин</label>
+        <div class="validation" th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Name Error</div>
+        <input class="form-control" type="text" th:field="*{login}"/>
+    </div>
+    <div class="form-group">
+        <label>Пароль</label>
+        <div class="validation" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</div>
+        <input class="form-control" type="password" th:field="*{password}"/>
+    </div>
+    <input type="submit" value="Принять" class="form-control btn btn-primary"/>
+
+</form>
+
+</div>
+</body>
+</html>
