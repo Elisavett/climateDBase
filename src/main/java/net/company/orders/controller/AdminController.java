@@ -56,13 +56,13 @@ public class AdminController {
         MeasuringInstrument measuringInstrument = measuringInstrumentService.findById(measuringInstrumentId);
         physicalQuantity.setMeasuringInstrument(measuringInstrument);
         measuringInstrumentService.saveMeasuringInstrument(measuringInstrument);
-        return "redirect:/";
+        return "redirect:/getPhysicalQuantities";
     }
     @GetMapping("/deletePhysicalQuantity/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public String deletePhysicalQuantity(@PathVariable("id") Long id){
         physicalQuantityService.deleteById(id);
-        return "redirect:/";
+        return "redirect:/getPhysicalQuantities";
     }
     @GetMapping("/editPhysicalQuantity/{id}")
     @PreAuthorize("hasAuthority('admin')")
@@ -80,7 +80,7 @@ public class AdminController {
         }
         physicalQuantity.setId(physicalQuantity_id);
         physicalQuantityService.savePhysicalQuantity(physicalQuantity);
-        return ("redirect:/");
+        return ("redirect:/getPhysicalQuantities");
     }
 
     /*

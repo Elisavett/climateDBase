@@ -1,6 +1,5 @@
 package net.company.orders.security;
 
-import lombok.Data;
 import net.company.orders.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,9 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Data
 public class SecurityUser implements UserDetails {
 
         private final String username;

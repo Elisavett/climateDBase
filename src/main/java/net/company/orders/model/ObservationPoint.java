@@ -1,16 +1,11 @@
 package net.company.orders.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @Table(name = "observation_point")
 public class ObservationPoint {
     @Id
@@ -36,5 +31,45 @@ public class ObservationPoint {
                 ", \"description\":\"" + description + '\"' +
                  coords+
                 "}";
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<MeasuringInstrument> getMeasuringInstruments() {
+        return measuringInstruments;
+    }
+
+    public void setMeasuringInstruments(List<MeasuringInstrument> measuringInstruments) {
+        this.measuringInstruments = measuringInstruments;
+    }
+
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
     }
 }
