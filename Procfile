@@ -1,1 +1,1 @@
-web:    java $JAVA_OPTS -jar target/hellospring-0.0.1-SNAPSHOT.jar
+web:    java $JAVA_OPTS -jar target/orders-0.0.1-SNAPSHOT.jar
