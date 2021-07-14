@@ -48,7 +48,7 @@ public class SiteController {
     public String getObservationPoints(@RequestParam Long id, Model model){
         ObservationPoint observationPoint = observationPointService.findById(id);
         model.addAttribute("observationPoint", observationPoint);
-        return "physicalQuantities";
+        return "physicalQuantityForObsPoint";
     }
     @GetMapping("/getPhysicalQuantities")
     public String getPhysicalQuantities(Model model){

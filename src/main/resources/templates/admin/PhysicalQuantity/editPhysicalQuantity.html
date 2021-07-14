@@ -38,7 +38,7 @@
         <div class="form-group">
             <label for="measuringInstrumentId">Средство измерения</label>
             <select id="measuringInstrumentId" name="measuringInstrumentId" class="form-control">
-                <option th:each="measuringInstrument : ${measuringInstruments}"
+                <option th:each="measuringInstrument : ${physicalQuantity.getMeasuringInstrument()}"
                         th:value="${measuringInstrument.getId()}"
                         th:text="${measuringInstrument.getName()}"></option>
             </select>

@@ -8,14 +8,10 @@
     <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
 </header>
 <body>
-<div class="container" th:switch="${observationPoint}">
+<div class="container" th:switch="${physicalQuantities}">
     <h2 th:case="null">No users found!</h2>
     <div th:case="*">
-        <h2>Пункт наблюдения [[${observationPoint.getName()}]]</h2>
-        <h4>[[${observationPoint.getDescription()}]]</h4>
-        <div sec:authorize="hasAuthority('admin')" class="form-group">
-            <a href="/admin/addPhysicalQuantity">Добавить физ. величину</a>
-        </div>
+        <h2>Физические величины</h2>
         <table class="table">
             <thead>
             <tr>
@@ -41,18 +37,18 @@
             </tr>
             </thead>
             <tbody>
-            <span th:each="measuringInstrument : ${observationPoint.getMeasuringInstruments()}">
+            <span th:each="PhysicalQuantity : ${physicalQuantities}">
                 <tr>
-                    <td th:text='${measuringInstrument.getPhysicalQuantity().getName()}'></td>
-                    <td><i th:text='${measuringInstrument.getPhysicalQuantity().getDesignation()}'></i></td>
-                    <td><i th:text='${measuringInstrument.getPhysicalQuantity().getUnit()}'></i></td>
-                    <td th:text='${measuringInstrument.getPhysicalQuantity().getDb_designation()}'></td>
-                    <td th:text='${measuringInstrument.getName()}'></td>
-                    <td th:text='${measuringInstrument.getPhysicalQuantity().getMeasurement_mode()}'></td>
+                    <td th:text='${PhysicalQuantity.getName()}'></td>
+                    <td><i th:text='${PhysicalQuantity.getDesignation()}'></i></td>
+                    <td><i th:text='${PhysicalQuantity.getUnit()}'></i></td>
+                    <td th:text='${PhysicalQuantity.getDb_designation()}'></td>
+                    <td th:text='${PhysicalQuantity.getMeasuringInstrument()!=null?PhysicalQuantity.getMeasuringInstrument().getName():"-"}'></td>
+                    <td th:text='${PhysicalQuantity.getMeasurement_mode()}'></td>
 
                     <td sec:authorize="hasAuthority('admin')">
-                        <a th:href="@{/admin/editPhysicalQuantity/{id}(id=${measuringInstrument.getPhysicalQuantity().getId()})}">Редактировать</a> |
-                        <a th:href="@{/admin/deletePhysicalQuantity/{id}(id=${measuringInstrument.getPhysicalQuantity().getId()})}">Удалить</a>
+                        <a th:href="@{/admin/editPhysicalQuantity/{id}(id=${PhysicalQuantity.getId()})}">Редактировать</a> |
+                        <a th:href="@{/admin/deletePhysicalQuantity/{id}(id=${PhysicalQuantity.getId()})}">Удалить</a>
                     </td>
                 </tr>
             </span>

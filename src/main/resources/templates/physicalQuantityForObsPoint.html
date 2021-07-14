@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <span th:replace="shared/headers"></span>
+</head>
+<header>
+    <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
+</header>
+<body>
+<div class="container" th:switch="${observationPoint}">
+    <h2 th:case="null">No users found!</h2>
+    <div th:case="*">
+        <h2>Пункт наблюдения [[${observationPoint.getName()}]]</h2>
+        <h4>[[${observationPoint.getDescription()}]]</h4>
+        <div sec:authorize="hasAuthority('admin')" class="form-group">
+            <a th:href="@{/admin/addPhysicalQuantity/{observationPointId}(observationPointId=${observationPoint.getId()})}">Добавить физ. величину</a>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Физическая величина
+                </th>
+                <th>
+                    Обозначение
+                </th>
+                <th>
+                    Единица измерения
+                </th>
+                <th>
+                    Условное обозначение в БД
+                </th>
+                <th>
+                    Средство измерения
+                </th>
+                <th>
+                    Режим (сроки) измерения
+                </th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <span th:each="measuringInstrument : ${observationPoint.getMeasuringInstruments()}">
+                <tr th:if="${measuringInstrument.getPhysicalQuantity()}">
+                    <td th:text='${measuringInstrument.getPhysicalQuantity().getName()}'></td>
+                    <td><i th:text='${measuringInstrument.getPhysicalQuantity().getDesignation()}'></i></td>
+                    <td><i th:text='${measuringInstrument.getPhysicalQuantity().getUnit()}'></i></td>
+                    <td th:text='${measuringInstrument.getPhysicalQuantity().getDb_designation()}'></td>
+                    <td th:text='${measuringInstrument.getName()}'></td>
+                    <td th:text='${measuringInstrument.getPhysicalQuantity().getMeasurement_mode()}'></td>
+
+                    <td sec:authorize="hasAuthority('admin')">
+                        <a th:href="@{/admin/editPhysicalQuantity/{id}(id=${measuringInstrument.getPhysicalQuantity().getId()})}">Редактировать</a> |
+                        <a th:href="@{/admin/deletePhysicalQuantity/{id}(id=${measuringInstrument.getPhysicalQuantity().getId()})}">Удалить</a>
+                    </td>
+                </tr>
+            </span>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
