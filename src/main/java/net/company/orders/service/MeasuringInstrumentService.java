@@ -1,7 +1,6 @@
 package net.company.orders.service;
 
-import net.company.orders.model.MeasuringInstrument;
-import net.company.orders.model.ObservationPoint;
+import net.company.orders.model.Entities.MeasuringInstrument;
 import net.company.orders.repository.MeasuringInstrumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

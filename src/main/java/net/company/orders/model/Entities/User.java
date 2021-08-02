@@ -1,4 +1,4 @@
-package net.company.orders.model;
+package net.company.orders.model.Entities;
 
 
 import javax.persistence.Column;

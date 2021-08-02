@@ -1,6 +1,6 @@
 package net.company.orders.service;
 
-import net.company.orders.model.PhysicalQuantity;
+import net.company.orders.model.Entities.PhysicalQuantity;
 import net.company.orders.repository.PhysicalQuantityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,11 @@ public class PhysicalQuantityService {
         return physicalQuantityRepository.findById(id).get();
     }
 
-    public void savePhysicalQuantity(PhysicalQuantity physicalQuantity){
+    public PhysicalQuantity findByName(String name){
+        return physicalQuantityRepository.findByName(name).get();
+    }
+
+    public void save(PhysicalQuantity physicalQuantity){
         physicalQuantityRepository.save(physicalQuantity);
     }
 

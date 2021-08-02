@@ -1,12 +1,13 @@
 package net.company.orders.controller;
 
 import net.company.orders.databases.DataBaseManager;
-import net.company.orders.model.ObservationPoint;
-import net.company.orders.model.PhysicalQuantity;
-import net.company.orders.service.CoordinatesService;
-import net.company.orders.service.DbService;
-import net.company.orders.service.ObservationPointService;
-import net.company.orders.service.PhysicalQuantityService;
+import net.company.orders.model.Entities.MeasuringInstrument;
+import net.company.orders.model.Entities.ObservationPoint;
+import net.company.orders.model.Entities.Sensor;
+import net.company.orders.model.Entities.PhysicalQuantity;
+import net.company.orders.model.TemperatureFromBase;
+import net.company.orders.model.ViewModel;
+import net.company.orders.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,22 +21,27 @@ public class SiteController {
 
 
     private ObservationPointService observationPointService;
-    private CoordinatesService coordinatesService;
+    private SensorService sensorService;
     private PhysicalQuantityService physicalQuantityService;
+    private MeasuringInstrumentService measuringInstrumentService;
     private DbService dbService;
 
     @Autowired
-    SiteController(ObservationPointService observationPointService, CoordinatesService coordinatesService, PhysicalQuantityService physicalQuantityService, DbService dbService){
+    SiteController(MeasuringInstrumentService measuringInstrumentService, PhysicalQuantityService physicalQuantityService, ObservationPointService observationPointService, SensorService sensorService, DbService dbService){
         this.observationPointService = observationPointService;
-        this.coordinatesService = coordinatesService;
+        this.sensorService = sensorService;
         this.physicalQuantityService = physicalQuantityService;
+        this.measuringInstrumentService = measuringInstrumentService;
         this.dbService = dbService;
     }
 
     @GetMapping("/")
-    public String map(Model model) {
-        model.addAttribute("temp", Math.round(DataBaseManager.getDbData()));
-        model.addAttribute("json", observationPointService.getJsonCoordinate());
+    public String map(@RequestParam(value = "pqId", required=false) Long physicalQuantityId, Model model) {
+        if(physicalQuantityId == null) physicalQuantityId = 1L;
+        PhysicalQuantity physicalQuantity = physicalQuantityService.findById(physicalQuantityId);
+        model.addAttribute("physicalQuantities", physicalQuantityService.findAll());
+        List<TemperatureFromBase> obsPointValues = DataBaseManager.getDbData(physicalQuantity);
+        model.addAttribute("json", observationPointService.getJsonCoordinate(obsPointValues));
         return "index";
     }
     @GetMapping("/getObservationPoints")
@@ -45,16 +51,41 @@ public class SiteController {
         return "observationPoints";
     }
     @GetMapping("/getObservationPointById")
-    public String getObservationPoints(@RequestParam Long id, Model model){
+    public String getObservationPointById(@RequestParam Long id, Model model){
+        ObservationPoint observationPoint = observationPointService.findById(id);
+        model.addAttribute("observationPoint", observationPoint);
+        return "observationPoint";
+    }
+    @GetMapping("/getMeasuringInstrumentById")
+    public String getMeasuringInstrumentById(@RequestParam Long id, @RequestParam Long obsPointId, Model model){
+        MeasuringInstrument measuringInstrument = measuringInstrumentService.findById(id);
+        ViewModel observationPoint = observationPointService.findById(obsPointId);
+        model.addAttribute("measuringInstrument", measuringInstrument);
+        model.addAttribute("observationPoint", observationPoint);
+        return "measuringInstrument";
+    }
+    @GetMapping("/getSensorById")
+    public String getSensor(@RequestParam Long id, @RequestParam Long obsPointId, @RequestParam Long measurInstrId, Model model){
+        Sensor sensor = sensorService.findById(id);
+        ViewModel observationPoint = observationPointService.findById(obsPointId);
+        ViewModel measuringInstrument = measuringInstrumentService.findById(measurInstrId);
+        model.addAttribute("sensor", sensor);
+        model.addAttribute("observationPoint", observationPoint);
+        model.addAttribute("measuringInstrument", measuringInstrument);
+        return "sensor";
+    }
+    @GetMapping("/getPhysicalQuantities")
+    public String getPhysicalQuantities(Model model){
+        List<PhysicalQuantity> physicalQuantities = physicalQuantityService.findAll();
+        model.addAttribute("physicalQuantities", physicalQuantities);
+        return "physicalQuantities";
+    }
+    @GetMapping("/getPhysicalQuantityForObsPoint")
+    public String getPhysicalQuantityForObsPoint(@RequestParam Long id, Model model){
         ObservationPoint observationPoint = observationPointService.findById(id);
         model.addAttribute("observationPoint", observationPoint);
         return "physicalQuantityForObsPoint";
     }
-    @GetMapping("/getPhysicalQuantities")
-    public String getPhysicalQuantities(Model model){
-        List<PhysicalQuantity> physicalQuantityList = physicalQuantityService.findAll();
-        model.addAttribute("physicalQuantities", physicalQuantityList);
-        return "physicalQuantities";
-    }
+
 
 }

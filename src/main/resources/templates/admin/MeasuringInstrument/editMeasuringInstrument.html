@@ -16,7 +16,7 @@
         <h2>Редактирование средства измерения</h2>
         <a href="#" onclick="submitForm()">Удалить средство измерения</a>
         <input class="form-control" type="hidden" th:attr="value=*{id}" id="measuringInstrument_id" name="measuringInstrument_id">
-        <input class="form-control" type="hidden" th:attr="value=*{physicalQuantity!=null?physicalQuantity.getId():0}" id="physicalQuantityId" name="physicalQuantityId">
+        <input class="form-control" type="hidden" th:attr="value=*{sensor!=null?sensor.getId():0}" id="physicalQuantityId" name="physicalQuantityId">
 
         <div class="form-group">
             <label for="name">Название</label>

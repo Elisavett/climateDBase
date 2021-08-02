@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <span th:replace="shared/headers"></span>
+</head>
+<header>
+    <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
+</header>
+<body>
+<div class="container" th:switch="${measuringInstruments.size()}">
+    <div th:case="0"><h3>В базе данных нет средств измерений для выбранного пункта наблюдения</h3>
+        <h3>Чтобы добавить датчик <a th:href="@{/admin/addMeasuringInstrumentToObsPoint/{obsPointId}(obsPointId=${observationPointId})}">добавьте средство измерения</a></h3>
+    </div>
+    <div th:case="*">
+    <form class="forma" action="#" th:action="@{/admin/addSensor}" th:object="${sensor}" method="post">
+        <h2>Добавление датчика</h2>
+        <div class="form-group">
+            <label for="name">Название</label>
+            <div class="validation" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+            <input class="form-control" type="text" th:field="*{name}" id="name" placeholder="Введите название..">
+        </div>
+        <div class="form-group">
+            <label for="sensorId">Физическая величина</label>\
+            <select id="sensorId" name="sensorId" class="form-control">
+                <option th:each="physicalQuantity : ${physicalQuantities}"
+                        th:value="${physicalQuantity.getId()}"
+                        th:text="${physicalQuantity.getName()}"></option>
+            </select>
+            <h6>Если в списке нет нужной величины, вы можете <a href="/admin/addPhysicalQuantity" type="get">добавить новую</a></h6>
+        </div>
+        <div class="form-group">
+            <label for="measuringInstrumentId">Средство измерения</label>
+            <select id="measuringInstrumentId" name="measuringInstrumentId" class="form-control">
+                <option th:each="measuringInstrument : ${measuringInstruments}"
+                        th:value="${measuringInstrument.getId()}"
+                        th:text="${measuringInstrument.getName()}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="measurement_mode">Режим (сроки) измерения </label>
+            <div class="validation" th:if="${#fields.hasErrors('measurement_mode')}" th:errors="*{measurement_mode}">Name Error</div>
+            <input type="text" class="form-control"  th:field="*{measurement_mode}" id="measurement_mode" placeholder="Введите описание..">
+        </div>
+        <div class="form-group">
+            <label for="sensor_num">Обозначение датчика в базе данных</label>
+            <div class="validation" th:if="${#fields.hasErrors('sensor_num')}" th:errors="*{sensor_num}">Name Error</div>
+            <input type="text" class="form-control"  th:field="*{sensor_num}" id="sensor_num" placeholder="Введите описание..">
+        </div>
+        <div class="form-group">
+            <label for="sensor_table">Таблица датчика в базе данных</label>
+            <div class="validation" th:if="${#fields.hasErrors('sensor_table')}" th:errors="*{sensor_table}">Name Error</div>
+            <input type="text" class="form-control"  th:field="*{sensor_table}" id="sensor_table" placeholder="Введите описание..">
+        </div>
+        <div class="form-group">
+            <label for="sensor_DB">Имя базы данных</label>
+            <div class="validation" th:if="${#fields.hasErrors('sensor_DB')}" th:errors="*{sensor_DB}">Name Error</div>
+            <input type="text" class="form-control"  th:field="*{sensor_DB}" id="sensor_DB" placeholder="Введите описание..">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Создать">
+    </form>
+</div>
+</div>
+</body>
+</html>

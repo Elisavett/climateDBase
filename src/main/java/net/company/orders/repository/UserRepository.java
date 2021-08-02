@@ -1,6 +1,6 @@
 package net.company.orders.repository;
 
-import net.company.orders.model.User;
+import net.company.orders.model.Entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

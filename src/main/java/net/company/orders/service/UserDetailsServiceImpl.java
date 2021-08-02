@@ -1,6 +1,6 @@
 package net.company.orders.service;
 
-import net.company.orders.model.User;
+import net.company.orders.model.Entities.User;
 import net.company.orders.repository.UserRepository;
 import net.company.orders.security.SecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;

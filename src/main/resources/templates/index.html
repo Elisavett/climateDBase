@@ -78,12 +78,10 @@
     <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
 </header>
 <body xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-    <link rel="stylesheet" th:href="@{/back.css}">
 
     <span for="json"></span><input type="text" th:value="*{json}" id="json" hidden="true">
     <span sec:authorize="isAuthenticated()" sec:authentication="principal.authorities" id="authority" hidden="true"></span>
-    <input type="text" th:value="*{temp}" id="temp" hidden="true">
-    <!--<div th:replace="fragments/navbar :: navbar (${'map'})"></div>-->
+        <!--<div th:replace="fragments/navbar :: navbar (${'map'})"></div>-->
     <input type="text" th:value="*{groupNum}" id="groupNum" hidden="true">
 
 
@@ -92,10 +90,12 @@
         <script type="text/javascript" th:src="@{/map1.js}"></script>
         <div id="map"></div>
     </span>
-
-
-
-
+    <div class="dropdown">
+        <button class="dropbtn">Тип датчика</button>
+        <div class="dropdown-content">
+            <a th:each="physicalQuantity : ${physicalQuantities}" th:text="${physicalQuantity.getName()}" th:href="@{/(pqId=${physicalQuantity.getId()})}"></a>
+        </div>
+    </div>
 </body>
 
 </html>

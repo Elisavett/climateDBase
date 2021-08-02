@@ -17,7 +17,7 @@
     <h2 th:case="null">No users found!</h2>
     <div th:case="*">
         <h1>Пункты наблюдений</h1>
-        <div sec:authorize="hasAuthority('admin')" class="form-group">
+        <div sec:authorize="isAuthenticated()" class="form-group">
             <a href="/admin/addObservationPoint">Добавить пункт наблюдения</a>
         </div>
         <table class="table">
@@ -34,15 +34,15 @@
             <tbody>
             <span th:each="observationPoint : ${observationPoints}">
                 <tr th:with="size = ${observationPoint.getMeasuringInstruments().size()}">
-                    <th sec:authorize="hasAuthority('admin')" th:rowspan="${size>0?size+1:2}">
-                        <a class="tablePoints" title="Редактировать" th:href="@{/admin/editObservationPoint/{id}(id=${observationPoint.getId()})}" th:text='${observationPoint.getName()}'></a>
+                    <th sec:authorize="isAuthenticated()" th:rowspan="${size>0?size+1:2}">
+                        <a class="tablePoints" title="Просмотр" th:href="@{/getObservationPointById(id=${observationPoint.getId()})}" th:text='${observationPoint.getName()}'></a>
                     </th>
-                    <th sec:authorize="!isAuthenticated()" th:rowspan="${size>0?size:1}">
-                        <span  th:text='${observationPoint.getName()}'></span>
+                   <th sec:authorize="!isAuthenticated()" th:rowspan="${size>0?size:1}">
+                        <a class="tablePoints" title="Просмотр" th:href="@{/getObservationPointById(id=${observationPoint.getId()})}" th:text='${observationPoint.getName()}'></a>
                     </th>
                     <td>
-                        <a class="tablePoints" sec:authorize="hasAuthority('admin')" th:if="${size}" title="Редактировать" th:href="@{/admin/editMeasuringInstrument/{id}(id=${observationPoint.getMeasuringInstruments().get(0).getId()})}" th:text="${observationPoint.getMeasuringInstruments().get(0).getName()}"></a>
-                        <span sec:authorize="!isAuthenticated()" th:if="${size}" th:text="${observationPoint.getMeasuringInstruments().get(0).getName()}"></span>
+                        <a class="tablePoints" th:if="${size}" title="Просмотр" th:href="@{/getMeasuringInstrumentById(id=${observationPoint.getMeasuringInstruments().get(0).getId()}, obsPointId=${observationPoint.getId()})}" th:text="${observationPoint.getMeasuringInstruments().get(0).getName()}"></a>
+                        <!--<span sec:authorize="!isAuthenticated()" th:if="${size}" th:text="${observationPoint.getMeasuringInstruments().get(0).getName()}"></span>-->
                         <span sec:authorize="!isAuthenticated()"  th:unless="${size}">-</span>
                     </td>
 <!--                <td th:rowspan="${size>0?size:1}" sec:authorize="hasAuthority('admin')">
@@ -52,11 +52,10 @@
                 </tr>
                 <tr th:each="measuringInstrument,iterStat : ${observationPoint.getMeasuringInstruments()}" th:if="${iterStat.index>0}">
                     <td>
-                        <a class="tablePoints" sec:authorize="hasAuthority('admin')" title="Редактировать" th:href="@{/admin/editMeasuringInstrument/{id}(id=${measuringInstrument.getId()})}" th:text='${measuringInstrument.getName()}'></a>
-                        <span sec:authorize="!isAuthenticated()" th:text='${measuringInstrument.getName()}'></span>
+                        <a class="tablePoints" title="Просмотр" th:href="@{/getMeasuringInstrumentById(id=${measuringInstrument.getId()}, obsPointId=${observationPoint.getId()})}" th:text="${measuringInstrument.getName()}"></a>
                     </td>
                 </tr>
-                <tr sec:authorize="hasAuthority('admin')">
+                <tr sec:authorize="isAuthenticated()">
                      <td>
                         <a th:href="@{/admin/addMeasuringInstrumentToObsPoint/{obsPointId}(obsPointId=${observationPoint.getId()})}">Добавить новое средство измерения</a>
                      </td>

@@ -46,7 +46,7 @@
                     <td th:text='${PhysicalQuantity.getMeasuringInstrument()!=null?PhysicalQuantity.getMeasuringInstrument().getName():"-"}'></td>
                     <td th:text='${PhysicalQuantity.getMeasurement_mode()}'></td>
 
-                    <td sec:authorize="hasAuthority('admin')">
+                    <td sec:authorize="isAuthenticated()">
                         <a th:href="@{/admin/editPhysicalQuantity/{id}(id=${PhysicalQuantity.getId()})}">Редактировать</a> |
                         <a th:href="@{/admin/deletePhysicalQuantity/{id}(id=${PhysicalQuantity.getId()})}">Удалить</a>
                     </td>

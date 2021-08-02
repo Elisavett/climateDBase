@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <span th:replace="shared/headers"></span>
+    <style>
+        a.tablePoints{
+            color: black;
+        }
+    </style>
+</head>
+<header>
+    <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
+</header>
+<body>
+<div class="container">
+        <h5><a class="tablePoints" title="Просмотр" th:href="@{/getObservationPointById(id=${observationPoint.getId()})}" th:text='${observationPoint.getName()}'></a> >
+            <a class="tablePoints" title="Просмотр" th:href="@{/getMeasuringInstrumentById(id=${measuringInstrument.getId()}, obsPointId=${observationPoint.getId()})}" th:text='${measuringInstrument.getName()}'></a>
+        </h5>
+        <div sec:authorize="isAuthenticated()" class="form-group">
+            <a th:href="@{/admin/editMeasuringInstrument/{id}(id=${measuringInstrument.getId()})}">Редактировать средство измерения</a>
+            <a th:href="@{/admin/addSensorToMeasInstr/{measInstrId}(measInstrId=${measuringInstrument.getId()})}">Добавить датчик</a>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Датчик
+                </th>
+                <th>
+                    Физическая величина
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <span th:each="sensor : ${measuringInstrument.getSensors()}">
+                <tr>
+                    <th>
+                        <a class="tablePoints" title="Просмотр" th:href="@{/getSensorById(id=${sensor.getId()}, obsPointId=${observationPoint.getId()}, measurInstrId=${measuringInstrument.getId()})}" th:text="${sensor.getName()}"></a>
+                    </th>
+                    <td>
+                        <span class="tablePoints" th:if="${sensor.getPhysicalQuantity()}" th:text="${sensor.getPhysicalQuantity().getName()}"></span>
+                        <span th:unless="${sensor.getPhysicalQuantity()}">
+                            <a sec:authorize="isAuthenticated()" th:href="@{/admin/addPhysicalQuantityToSensor{sensorId}(sensorId=${sensor.getId()}})}">Добавить физическую величину</a>
+                            <span sec:authorize="!isAuthenticated()">-</span>
+                        </span>
+                    </td>
+                </tr>
+            </span>
+            </tbody>
+        </table>
+</div>
+</body>
+</html>

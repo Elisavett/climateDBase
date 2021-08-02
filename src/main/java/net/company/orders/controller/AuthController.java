@@ -1,6 +1,6 @@
 package net.company.orders.controller;
 
-import net.company.orders.model.User;
+import net.company.orders.model.Entities.User;
 import net.company.orders.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

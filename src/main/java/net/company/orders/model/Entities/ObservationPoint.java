@@ -1,4 +1,6 @@
-package net.company.orders.model;
+package net.company.orders.model.Entities;
+
+import net.company.orders.model.ViewModel;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -7,46 +9,40 @@ import java.util.List;
 
 @Entity
 @Table(name = "observation_point")
-public class ObservationPoint {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ObservationPoint extends ViewModel {
     @Column
-    @NotEmpty
-    private String name;
+    private Double latitude;
+    @Column
+    private Double longitude;
     @Column
     private String description;
     @OneToMany(mappedBy="observationPoint")
     private List<MeasuringInstrument> measuringInstruments = new ArrayList<>();
-    @OneToOne
-    @JoinColumn(name = "coordinates_id")
-    private Coordinates coordinates;
 
     @Override
     public String toString() {
-        String coords = coordinates != null ? ", \"coordinates\":" + coordinates.toString() : "";
         return "{" +
                 "\"id\":" + id +
                 ", \"name\":\"" + name + '\"' +
                 ", \"description\":\"" + description + '\"' +
-                 coords+
+                ", \"latitude\":\"" + latitude + '\"' +
+                ", \"longitude\":\"" + longitude + '\"' +
                 "}";
     }
-
-    public Long getId() {
-        return id;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
-    public String getName() {
-        return name;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String getDescription() {
@@ -65,11 +61,11 @@ public class ObservationPoint {
         this.measuringInstruments = measuringInstruments;
     }
 
-    public Coordinates getCoordinates() {
+/*    public Coordinates getCoordinates() {
         return coordinates;
     }
 
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
-    }
+    }*/
 }

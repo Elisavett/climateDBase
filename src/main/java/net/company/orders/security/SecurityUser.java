@@ -1,6 +1,6 @@
 package net.company.orders.security;
 
-import net.company.orders.model.User;
+import net.company.orders.model.Entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

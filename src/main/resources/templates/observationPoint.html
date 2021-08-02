@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <span th:replace="shared/headers"></span>
+    <style>
+        a.tablePoints{
+            color: black;
+        }
+    </style>
+</head>
+<header>
+    <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
+</header>
+<body>
+<div class="container">
+        <h5><a class="tablePoints" title="Просмотр" th:href="@{/getObservationPointById(id=${observationPoint.getId()})}" th:text='${observationPoint.getName()}'></a></h5>
+        <div sec:authorize="isAuthenticated()" class="form-group">
+            <a th:href="@{/admin/editObservationPoint/{id}(id=${observationPoint.getId()})}">Редактировать пункт наблюдения</a>
+            <a th:href="@{/admin/addMeasuringInstrumentToObsPoint/{obsPointId}(obsPointId=${observationPoint.getId()})}">Добавить средство измерения</a>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Средство измерения
+                </th>
+                <th>
+                    Датчик
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <span th:each="measuringInstrument : ${observationPoint.getMeasuringInstruments()}">
+                <tr th:with="size = ${measuringInstrument.getSensors().size()}">
+                    <th sec:authorize="isAuthenticated()" th:rowspan="${size>0?size+1:2}">
+                        <a class="tablePoints" title="Просмотр" th:href="@{/getMeasuringInstrumentById(id=${measuringInstrument.getId()}, obsPointId=${observationPoint.getId()})}" th:text='${measuringInstrument.getName()}'></a>
+                    </th>
+                   <th sec:authorize="!isAuthenticated()" th:rowspan="${size>0?size:1}">
+                        <a class="tablePoints" title="Просмотр" th:href="@{/getMeasuringInstrumentById(id=${measuringInstrument.getId()}, obsPointId=${observationPoint.getId()})}" th:text='${measuringInstrument.getName()}'></a>
+                    </th>
+                    <td>
+                        <a class="tablePoints" th:if="${size}" title="Просмотр" th:href="@{/getSensorById(id=${measuringInstrument.getSensors().get(0).getId()}, obsPointId=${observationPoint.getId()}, measurInstrId=${measuringInstrument.getId()})}" th:text="${measuringInstrument.getSensors().get(0).getName()}"></a>
+                        <span sec:authorize="!isAuthenticated()"  th:unless="${size}">-</span>
+                    </td>
+                </tr>
+                <tr th:each="sensor,iterStat : ${measuringInstrument.getSensors()}" th:if="${iterStat.index>0}">
+                    <td>
+                        <a class="tablePoints" title="Просмотр" th:href="@{/getSensorById(id=${sensor.getId()}, obsPointId=${observationPoint.getId()}, measurInstrId=${measuringInstrument.getId()})}" th:text="${sensor.getName()}"></a>
+                    </td>
+                </tr>
+                <tr sec:authorize="isAuthenticated()">
+                     <td>
+                        <a th:href="@{/admin/addSensorToMeasInstr/{measInstrId}(measInstrId=${measuringInstrument.getId()})}">Добавить новый датчик</a>
+                     </td>
+                </tr>
+            </span>
+            </tbody>
+        </table>
+</div>
+</body>
+</html>
