@@ -43,7 +43,7 @@ public class DataBaseManager {
                 Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
                 try (Connection conn = getConnection(connectionNum)) {
 
-                    PreparedStatement statement = conn.prepareStatement("SELECT `" + sensor.getSensor_num() + "` FROM `" + sensor.getSensor_table() + "` order by `time` desc");
+                    PreparedStatement statement = conn.prepareStatement("SELECT `" + sensor.getSensor_db_key() + "` FROM `" + sensor.getSensor_table() + "` order by `time` desc");
                     statement.setMaxRows(1);
                     ResultSet resultSet = statement.executeQuery();
                     resultSet.next();

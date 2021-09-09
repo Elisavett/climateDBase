@@ -19,9 +19,8 @@
         </h5>
         <div sec:authorize="isAuthenticated()" class="form-group">
             <a th:href="@{/admin/editMeasuringInstrument/{id}(id=${measuringInstrument.getId()})}">Редактировать средство измерения</a>
-            <a th:href="@{/admin/addSensorToMeasInstr/{measInstrId}(measInstrId=${measuringInstrument.getId()})}">Добавить датчик</a>
         </div>
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th>
@@ -41,7 +40,7 @@
                     <td>
                         <span class="tablePoints" th:if="${sensor.getPhysicalQuantity()}" th:text="${sensor.getPhysicalQuantity().getName()}"></span>
                         <span th:unless="${sensor.getPhysicalQuantity()}">
-                            <a sec:authorize="isAuthenticated()" th:href="@{/admin/addPhysicalQuantityToSensor{sensorId}(sensorId=${sensor.getId()}})}">Добавить физическую величину</a>
+                            <a sec:authorize="isAuthenticated()" th:href="@{/admin/editSensor/{id}(id=${sensor.getId()})}">Добавить физическую величину</a>
                             <span sec:authorize="!isAuthenticated()">-</span>
                         </span>
                     </td>
@@ -49,6 +48,9 @@
             </span>
             </tbody>
         </table>
+    <div sec:authorize="isAuthenticated()" class="form-group">
+        <a th:href="@{/admin/addSensorToMeasInstr/{measInstrId}(measInstrId=${measuringInstrument.getId()})}">Добавить датчик</a>
+    </div>
 </div>
 </body>
 </html>

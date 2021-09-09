@@ -26,6 +26,16 @@
             <div class="validation" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Name Error</div>
             <textarea class="form-control" rows="3" cols="60" th:field="*{description}" id="description" placeholder="Введите описание.."></textarea>
         </div>
+        <div class="form-group">
+            <label for="latitude">Широта</label>
+            <div class="validation" th:if="${#fields.hasErrors('latitude')}" th:errors="*{latitude}">Name Error</div>
+            <input class="form-control" type="number" step="0.1"  th:field="*{latitude}" id="latitude" placeholder="Введите название..">
+        </div>
+        <div class="form-group">
+            <label for="longitude">Долгота</label>
+            <div class="validation" th:if="${#fields.hasErrors('longitude')}" th:errors="*{longitude}">Name Error</div>
+            <input class="form-control" type="number" step="0.1"  th:field="*{longitude}" id="longitude" placeholder="Введите описание..">
+        </div>
         <input class="btn btn-primary" type="submit" value="Принять">
     </form>
 </div>

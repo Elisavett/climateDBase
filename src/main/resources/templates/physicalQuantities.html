@@ -8,15 +8,18 @@
     <div th:replace="shared/menu :: navbar (${'resolve'})"></div>
 </header>
 <body>
+<form hidden id="deleteForm" method="post" action="/admin/deletePhysicalQuantity/">
+</form>
 <div class="container" th:switch="${physicalQuantities}">
-    <h2 th:case="null">No users found!</h2>
-    <div th:case="*">
         <h2>Физические величины</h2>
-        <table class="table">
+        <div sec:authorize="isAuthenticated()" class="form-group">
+            <a href="/admin/addPhysicalQuantity">Добавить физическую величину</a>
+        </div>
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th>
-                    Физическая величина
+                    Название
                 </th>
                 <th>
                     Обозначение
@@ -24,16 +27,6 @@
                 <th>
                     Единица измерения
                 </th>
-                <th>
-                    Условное обозначение в БД
-                </th>
-                <th>
-                    Средство измерения
-                </th>
-                <th>
-                    Режим (сроки) измерения
-                </th>
-
             </tr>
             </thead>
             <tbody>
@@ -42,13 +35,9 @@
                     <td th:text='${PhysicalQuantity.getName()}'></td>
                     <td><i th:text='${PhysicalQuantity.getDesignation()}'></i></td>
                     <td><i th:text='${PhysicalQuantity.getUnit()}'></i></td>
-                    <td th:text='${PhysicalQuantity.getDb_designation()}'></td>
-                    <td th:text='${PhysicalQuantity.getMeasuringInstrument()!=null?PhysicalQuantity.getMeasuringInstrument().getName():"-"}'></td>
-                    <td th:text='${PhysicalQuantity.getMeasurement_mode()}'></td>
-
                     <td sec:authorize="isAuthenticated()">
                         <a th:href="@{/admin/editPhysicalQuantity/{id}(id=${PhysicalQuantity.getId()})}">Редактировать</a> |
-                        <a th:href="@{/admin/deletePhysicalQuantity/{id}(id=${PhysicalQuantity.getId()})}">Удалить</a>
+                        <a href="#" th:attr="onclick=|submitForm('${PhysicalQuantity.getId()}')|">Удалить</a>
                     </td>
                 </tr>
             </span>
@@ -57,4 +46,14 @@
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    function submitForm(url){
+        var answer = confirm('Вы уверены что хотите удалить физическую величину?');
+        if(answer) {
+            let action = $('#deleteForm').attr("action");
+            $('#deleteForm').attr("action", action + url);
+            $('#deleteForm').submit();
+        }
+    }
+</script>
 </html>

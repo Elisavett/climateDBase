@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "physical_quantity")
 public class PhysicalQuantity extends ViewModel {
+
     @Column
     @NotEmpty
     private String designation;
@@ -16,7 +17,6 @@ public class PhysicalQuantity extends ViewModel {
     @Column
     @NotEmpty
     private String unit;
-
 
     @OneToMany(mappedBy = "physicalQuantity")
     private List<Sensor> sensors;

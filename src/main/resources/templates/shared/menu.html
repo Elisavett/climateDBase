@@ -17,6 +17,9 @@
                     <li class="nav-item">
                         <a  class="nav-link" th:href="@{/getObservationPoints}">Пункты наблюдения</a>
                     </li>
+                    <li class="nav-item">
+                        <a  class="nav-link" th:href="@{/getPhysicalQuantities}">Физические величины</a>
+                    </li>
                 </ul>
                 <div th:with="know = ${session['SPRING_SECURITY_CONTEXT']}">
                      <div th:if="${know}">

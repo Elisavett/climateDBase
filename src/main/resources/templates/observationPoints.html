@@ -14,13 +14,11 @@
 </header>
 <body>
 <div class="container" th:switch="${observationPoints}">
-    <h2 th:case="null">No users found!</h2>
-    <div th:case="*">
-        <h1>Пункты наблюдений</h1>
+        <h2>Пункты наблюдений</h2>
         <div sec:authorize="isAuthenticated()" class="form-group">
             <a href="/admin/addObservationPoint">Добавить пункт наблюдения</a>
         </div>
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th>

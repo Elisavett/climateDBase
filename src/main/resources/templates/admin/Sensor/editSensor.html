@@ -10,46 +10,62 @@
 </header>
 <body>
 <div class="container">
-    <form class="forma" action="#" th:action="@{/admin/editPhysicalQuantity}" th:object="${sensor}" method="post">
-        <h2>Редактирование физической величины</h2>
-        <input class="form-control" type="hidden" th:attr="value=*{id}" id="physicalQuantity_id" name="physicalQuantity_id">
-
+    <form hidden id="deleteForm" method="post" th:action="'/admin/deleteSensor/' + ${sensor.getId()}">
+    </form>
+    <form class="forma" action="#" th:action="@{/admin/editSensor}" th:object="${sensor}" method="post">
+        <h2>Редактирование датчика</h2>
+        <input class="form-control" type="hidden" th:attr="value=*{id}" id="sensor_id" name="sensor_id">
+        <a href="#" onclick="submitForm()">Удалить датчик</a>
 
         <div class="form-group">
             <label for="name">Название</label>
-            <div class="validation" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
             <input class="form-control" type="text" th:field="*{name}" id="name" placeholder="Введите название..">
         </div>
         <div class="form-group">
-            <label for="designation">Обозначение</label>
-            <div class="validation" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}">Name Error</div>
-            <input type="text" class="form-control"  th:field="*{designation}" id="designation" placeholder="Введите описание..">
-        </div>
-        <div class="form-group">
-            <label for="unit">Единица измерения</label>
-            <div class="validation" th:if="${#fields.hasErrors('unit')}" th:errors="*{unit}">Name Error</div>
-            <input type="text" class="form-control"  th:field="*{unit}" id="unit" placeholder="Введите описание..">
-        </div>
-        <div class="form-group">
-            <label for="db_designation">Условное обозначение в БД</label>
-            <div class="validation" th:if="${#fields.hasErrors('db_designation')}" th:errors="*{db_designation}">Name Error</div>
-            <input type="text" class="form-control"  th:field="*{db_designation}" id="db_designation" placeholder="Введите описание..">
+            <label for="physicalQuantityId">Физическая величина</label>
+            <select id="physicalQuantityId" name="physicalQuantityId" class="form-control">
+                <option th:each="physicalQuantity : ${physicalQuantities}"
+                        th:value="${physicalQuantity.getId()}"
+                        th:text="${physicalQuantity.getName()}"
+                        th:selected="${sensor.getPhysicalQuantity() != null ? physicalQuantity.getId() == sensor.getPhysicalQuantity().getId() : physicalQuantities.get(0)}"></option>
+            </select>
+            <h6>Если в списке нет нужной величины, вы можете <a href="/admin/addPhysicalQuantity" type="get">добавить новую</a></h6>
         </div>
         <div class="form-group">
             <label for="measuringInstrumentId">Средство измерения</label>
             <select id="measuringInstrumentId" name="measuringInstrumentId" class="form-control">
-                <option th:each="measuringInstrument : ${sensor.getMeasuringInstrument()}"
+                <option th:each="measuringInstrument : ${measuringInstruments}"
                         th:value="${measuringInstrument.getId()}"
-                        th:text="${measuringInstrument.getName()}"></option>
+                        th:text="${measuringInstrument.getName()}"
+                        th:selected="${measuringInstrument.getId() == sensor.getMeasuringInstrument().getId()}"></option>
             </select>
         </div>
         <div class="form-group">
             <label for="measurement_mode">Режим (сроки) измерения </label>
-            <div class="validation" th:if="${#fields.hasErrors('measurement_mode')}" th:errors="*{measurement_mode}">Name Error</div>
             <input type="text" class="form-control"  th:field="*{measurement_mode}" id="measurement_mode" placeholder="Введите описание..">
+        </div>
+        <div class="form-group">
+            <label for="sensor_db_key">Обозначение датчика в базе данных</label>
+            <input type="text" class="form-control"  th:field="*{sensor_db_key}" id="sensor_db_key" placeholder="Введите описание..">
+        </div>
+        <div class="form-group">
+            <label for="sensor_table">Таблица датчика в базе данных</label>
+            <input type="text" class="form-control"  th:field="*{sensor_table}" id="sensor_table" placeholder="Введите описание..">
+        </div>
+        <div class="form-group">
+            <label for="sensor_DB">Имя базы данных</label>
+            <input type="text" class="form-control"  th:field="*{sensor_DB}" id="sensor_DB" placeholder="Введите описание..">
         </div>
         <input class="btn btn-primary" type="submit" value="Принять">
     </form>
 </div>
 </body>
+<script type="text/javascript">
+    function submitForm(){
+        var answer = confirm('Вы уверены что хотите удалить датчик?');
+        if(answer) {
+            $('#deleteForm').submit();
+        }
+    }
+</script>
 </html>

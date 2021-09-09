@@ -22,8 +22,8 @@
             <input class="form-control" type="text" th:field="*{name}" id="name" placeholder="Введите название..">
         </div>
         <div class="form-group">
-            <label for="sensorId">Физическая величина</label>\
-            <select id="sensorId" name="sensorId" class="form-control">
+            <label for="physicalQuantityId">Физическая величина</label>
+            <select id="physicalQuantityId" name="physicalQuantityId" class="form-control">
                 <option th:each="physicalQuantity : ${physicalQuantities}"
                         th:value="${physicalQuantity.getId()}"
                         th:text="${physicalQuantity.getName()}"></option>
@@ -41,22 +41,22 @@
         <div class="form-group">
             <label for="measurement_mode">Режим (сроки) измерения </label>
             <div class="validation" th:if="${#fields.hasErrors('measurement_mode')}" th:errors="*{measurement_mode}">Name Error</div>
-            <input type="text" class="form-control"  th:field="*{measurement_mode}" id="measurement_mode" placeholder="Введите описание..">
+            <input type="text" class="form-control"  th:field="*{measurement_mode}" id="measurement_mode" placeholder="Введите режим измерения..">
         </div>
         <div class="form-group">
-            <label for="sensor_num">Обозначение датчика в базе данных</label>
-            <div class="validation" th:if="${#fields.hasErrors('sensor_num')}" th:errors="*{sensor_num}">Name Error</div>
-            <input type="text" class="form-control"  th:field="*{sensor_num}" id="sensor_num" placeholder="Введите описание..">
+            <label for="sensor_db_key">Обозначение датчика в базе данных</label>
+            <div class="validation" th:if="${#fields.hasErrors('sensor_db_key')}" th:errors="*{sensor_db_key}">Name Error</div>
+            <input type="text" class="form-control"  th:field="*{sensor_db_key}" id="sensor_db_key" placeholder="Введите обозначение в базе данных..">
         </div>
         <div class="form-group">
             <label for="sensor_table">Таблица датчика в базе данных</label>
             <div class="validation" th:if="${#fields.hasErrors('sensor_table')}" th:errors="*{sensor_table}">Name Error</div>
-            <input type="text" class="form-control"  th:field="*{sensor_table}" id="sensor_table" placeholder="Введите описание..">
+            <input type="text" class="form-control"  th:field="*{sensor_table}" id="sensor_table" placeholder="Введите таблицу в базе данных..">
         </div>
         <div class="form-group">
             <label for="sensor_DB">Имя базы данных</label>
             <div class="validation" th:if="${#fields.hasErrors('sensor_DB')}" th:errors="*{sensor_DB}">Name Error</div>
-            <input type="text" class="form-control"  th:field="*{sensor_DB}" id="sensor_DB" placeholder="Введите описание..">
+            <input type="text" class="form-control"  th:field="*{sensor_DB}" id="sensor_DB" placeholder="Введите имя базы данных..">
         </div>
         <input class="btn btn-primary" type="submit" value="Создать">
     </form>

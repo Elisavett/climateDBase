@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -47,6 +48,7 @@ public class SiteController {
     @GetMapping("/getObservationPoints")
     public String getObservationPoints(Model model){
         List<ObservationPoint> observationPointList = observationPointService.findAll();
+        observationPointList.sort(Comparator.comparing(ViewModel::getName));
         model.addAttribute("observationPoints", observationPointList);
         return "observationPoints";
     }
@@ -77,6 +79,7 @@ public class SiteController {
     @GetMapping("/getPhysicalQuantities")
     public String getPhysicalQuantities(Model model){
         List<PhysicalQuantity> physicalQuantities = physicalQuantityService.findAll();
+        physicalQuantities.sort(Comparator.comparing(ViewModel::getName));
         model.addAttribute("physicalQuantities", physicalQuantities);
         return "physicalQuantities";
     }

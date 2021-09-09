@@ -33,7 +33,7 @@ public class AdminController {
     @GetMapping("/addPhysicalQuantity")
     @PreAuthorize("hasAuthority('admin')")
     public String addPhysicalQuantity(PhysicalQuantity physicalQuantity, Model model) {
-        return "admin/Sensor/addSensor";
+        return "admin/PhysicalQuantity/addPhysicalQuantity";
     }
     @PostMapping("/addPhysicalQuantity")
     @PreAuthorize("hasAuthority('admin')")
@@ -42,7 +42,34 @@ public class AdminController {
             return "admin/PhysicalQuantity/addPhysicalQuantity";
         }
         physicalQuantityService.save(physicalQuantity);
-        return "redirect:/";
+        return "redirect:/getPhysicalQuantities";
+    }
+    @GetMapping("/editPhysicalQuantity/{id}")
+    @PreAuthorize("hasAuthority('admin')")
+    public String editPhysicalQuantity(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("physicalQuantity", physicalQuantityService.findById(id));
+        return "admin/PhysicalQuantity/editPhysicalQuantity";
+    }
+    @PostMapping("/editPhysicalQuantity")
+    @PreAuthorize("hasAuthority('admin')")
+    public String editPhysicalQuantity(@RequestParam Long physicalQuantity_id, @Valid PhysicalQuantity physicalQuantity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "admin/PhysicalQuantity/editPhysicalQuantity";
+        }
+        physicalQuantity.setId(physicalQuantity_id);
+        physicalQuantityService.save(physicalQuantity);
+        return "redirect:/getPhysicalQuantities";
+    }
+    @PostMapping("/deletePhysicalQuantity/{id}")
+    @PreAuthorize("hasAuthority('admin')")
+    public String deletePhysicalQuantity(@PathVariable("id") Long id){
+        List<Sensor> sensors = physicalQuantityService.findById(id).getSensors();
+        for (Sensor s: sensors) {
+            s.setPhysicalQuantity(null);
+            sensorService.save(s);
+        }
+        physicalQuantityService.deleteById(id);
+        return "redirect:/getPhysicalQuantities";
     }
     /*
     *Sensor
@@ -58,6 +85,18 @@ public class AdminController {
         return "admin/Sensor/addSensor";
     }
 
+    @GetMapping("/addSensorToMeasInstr/{measuringInstrumentId}")
+    @PreAuthorize("hasAuthority('admin')")
+    public String addSensorToMeasInstr(@PathVariable("measuringInstrumentId") Long measuringInstrumentId, Sensor sensor, Model model) {
+        MeasuringInstrument measuringInstrument = measuringInstrumentService.findById(measuringInstrumentId);
+        List<MeasuringInstrument> measuringInstrumentList = new ArrayList<MeasuringInstrument>();
+        measuringInstrumentList.add(measuringInstrument);
+        model.addAttribute("measuringInstruments", measuringInstrumentList);
+        model.addAttribute("physicalQuantities", physicalQuantityService.findAll());
+        model.addAttribute("observationPointId", measuringInstrument.getObservationPoint().getId());
+        return "admin/Sensor/addSensor";
+    }
+
     @PostMapping("/addSensor")
     @PreAuthorize("hasAuthority('admin')")
     public String addSensor(@Valid Sensor sensor, Long physicalQuantityId, Long measuringInstrumentId, BindingResult bindingResult) {
@@ -69,39 +108,41 @@ public class AdminController {
         sensor.setMeasuringInstrument(measuringInstrument);
         sensor.setPhysicalQuantity(physicalQuantity);
         sensorService.save(sensor);
-        Long observationPointId = measuringInstrument.getObservationPoint().getId();
-        return "redirect:/getObservationPointById?id="+observationPointId;
+        Long obsPointId = measuringInstrument.getObservationPoint().getId();
+        return "redirect:/getMeasuringInstrumentById?id="+measuringInstrumentId+"&obsPointId="+obsPointId;
     }
-    @GetMapping("/deletePhysicalQuantity/{id}")
+    @PostMapping("/deleteSensor/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public String deletePhysicalQuantity(@PathVariable("id") Long id){
+    public String deleteSensor(@PathVariable("id") Long id){
         MeasuringInstrument measuringInstrument = sensorService.findById(id).getMeasuringInstrument();
-        Long observationPointId = measuringInstrument.getObservationPoint().getId();
-        measuringInstrument.setSensors(new ArrayList<>());
-        measuringInstrumentService.saveMeasuringInstrument(measuringInstrument);
+        Long measuringInstrumentId = measuringInstrument.getId();
         sensorService.deleteById(id);
-        return "redirect:/getObservationPointById?id="+observationPointId;
+        Long obsPointId = measuringInstrument.getObservationPoint().getId();
+        return "redirect:/getMeasuringInstrumentById?id="+measuringInstrumentId+"&obsPointId="+obsPointId;
     }
-    @GetMapping("/editPhysicalQuantity/{id}")
+    @GetMapping("/editSensor/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public String editPhysicalQuantity(@PathVariable("id") Long id, Model model){
+    public String editSensor(@PathVariable("id") Long id, Model model){
         Sensor sensor = sensorService.findById(id);
-        model.addAttribute("physicalQuantity", sensor);
-
-        return "admin/PhysicalQuantity/editPhysicalQuantity";
+        model.addAttribute("sensor", sensor);
+        model.addAttribute("measuringInstruments", measuringInstrumentService.findAll());
+        model.addAttribute("physicalQuantities", physicalQuantityService.findAll());
+        return "admin/Sensor/editSensor";
     }
-    @PostMapping("/editPhysicalQuantity")
+    @PostMapping("/editSensor")
     @PreAuthorize("hasAuthority('admin')")
-    public String editPhysicalQuantity(@RequestParam Long physicalQuantity_id, Long measuringInstrumentId, @Valid Sensor sensor, BindingResult bindingResult) {
+    public String editSensor(@RequestParam Long sensor_id, Long physicalQuantityId, Long measuringInstrumentId, @Valid Sensor sensor, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "admin/PhysicalQuantity/editPhysicalQuantity";
+            return "admin/Sensor/editSensor";
         }
-        sensor.setId(physicalQuantity_id);
+        sensor.setId(sensor_id);
         MeasuringInstrument measuringInstrument = measuringInstrumentService.findById(measuringInstrumentId);
+        PhysicalQuantity physicalQuantity = physicalQuantityService.findById(physicalQuantityId);
         sensor.setMeasuringInstrument(measuringInstrument);
+        sensor.setPhysicalQuantity(physicalQuantity);
         sensorService.save(sensor);
         Long observationPointId = sensor.getMeasuringInstrument().getObservationPoint().getId();
-        return "redirect:/getObservationPointById?id="+observationPointId;
+        return "redirect:/getSensorById?id=" + sensor_id + "&obsPointId=" + observationPointId +"&measurInstrId="+measuringInstrumentId;
     }
 
     /*
@@ -182,7 +223,7 @@ public class AdminController {
             return "admin/ObservationPoint/addObservationPoint";
         }
         observationPointService.saveObservationPoint(observationPoint);
-        return "redirect:/";
+        return "redirect:/getObservationPoints";
     }
     @PostMapping("/deleteObservationPoint/{id}")
     @PreAuthorize("hasAuthority('admin')")
@@ -214,6 +255,6 @@ public class AdminController {
         }
         observationPoint.setId(observationPoint_id);
         observationPointService.saveObservationPoint(observationPoint);
-        return ("redirect:/");
+        return ("redirect:/getObservationPoints");
     }
 }

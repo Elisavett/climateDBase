@@ -16,7 +16,7 @@
         <div sec:authorize="hasAuthority('admin')" class="form-group">
             <a th:href="@{/admin/addSensor/{observationPointId}(observationPointId=${observationPoint.getId()})}">Добавить физ. величину</a>
         </div>
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th>

@@ -17,9 +17,8 @@
         <h5><a class="tablePoints" title="Просмотр" th:href="@{/getObservationPointById(id=${observationPoint.getId()})}" th:text='${observationPoint.getName()}'></a></h5>
         <div sec:authorize="isAuthenticated()" class="form-group">
             <a th:href="@{/admin/editObservationPoint/{id}(id=${observationPoint.getId()})}">Редактировать пункт наблюдения</a>
-            <a th:href="@{/admin/addMeasuringInstrumentToObsPoint/{obsPointId}(obsPointId=${observationPoint.getId()})}">Добавить средство измерения</a>
         </div>
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th>
@@ -57,6 +56,9 @@
             </span>
             </tbody>
         </table>
+    <div sec:authorize="isAuthenticated()" class="form-group">
+        <a th:href="@{/admin/addMeasuringInstrumentToObsPoint/{obsPointId}(obsPointId=${observationPoint.getId()})}">Добавить средство измерения</a>
+    </div>
 </div>
 </body>
 </html>

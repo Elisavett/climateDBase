@@ -23,6 +23,7 @@
             <textarea class="form-control" rows="3" cols="60" th:field="*{description}" id="description" placeholder="Введите описание.."></textarea>
         </div>
         <div class="form-group">
+            <label for="observationPointId">Пункт наблюдения</label>
             <select id="observationPointId" name="observationPointId" class="form-control">
                 <option th:each="observationPoint : ${observationPoints}"
                         th:value="${observationPoint.getId()}"

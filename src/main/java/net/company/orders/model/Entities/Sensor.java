@@ -2,6 +2,7 @@ package net.company.orders.model.Entities;
 
 
 import net.company.orders.model.ViewModel;
+import org.hibernate.integrator.spi.ServiceContributingIntegrator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -11,9 +12,8 @@ import javax.validation.constraints.NotEmpty;
 public class Sensor extends ViewModel {
     @Column
     private String measurement_mode;
-    @NotEmpty
     @Column
-    private Integer sensor_num;
+    private String sensor_db_key;
     @NotEmpty
     @Column
     private String sensor_table;
@@ -70,12 +70,12 @@ public class Sensor extends ViewModel {
         this.measuringInstrument = measuringInstrument;
     }
 
-    public Integer getSensor_num() {
-        return sensor_num;
+    public String getSensor_db_key() {
+        return sensor_db_key;
     }
 
-    public void setSensor_num(Integer sensor_num) {
-        this.sensor_num = sensor_num;
+    public void setSensor_db_key(String sensor_db_key) {
+        this.sensor_db_key = sensor_db_key;
     }
 
     public String getSensor_table() {

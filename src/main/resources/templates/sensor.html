@@ -15,33 +15,48 @@
 <body>
 <div class="container">
         <h5><a class="tablePoints" title="Просмотр" th:href="@{/getObservationPointById(id=${observationPoint.getId()})}" th:text='${observationPoint.getName()}'></a> >
-            <a class="tablePoints" title="Просмотр" th:href="@{/getMeasuringInstrumentById(id=${measuringInstrument.getId()}, obsPointId=${observationPoint.getId()})}" th:text='${measuringInstrument.getName()}'></a>
+            <a class="tablePoints" title="Просмотр" th:href="@{/getMeasuringInstrumentById(id=${measuringInstrument.getId()}, obsPointId=${observationPoint.getId()})}" th:text='${measuringInstrument.getName()}'></a> >
             <a class="tablePoints" title="Просмотр" th:href="@{/getSensorById(id=${sensor.getId()}, obsPointId=${observationPoint.getId()}, measInstrId=${measuringInstrument.getId()})}" th:text="${sensor.getName()}"></a>
         </h5>
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
-            <tr>
-                <th colspan="5">
-                    Датчик<br>
-                    <a sec:authorize="isAuthenticated()" th:href="@{/admin/editSensor/{id}(id=${sensor.getId()})}">Редактировать датчик</a>
-                </th>
-                <th colspan="3">
-                    Физическая величина<br>
-                    <a sec:authorize="isAuthenticated()" th:href="@{/admin/editPhysicalQuantity/{id}(id=${sensor.getPhysicalQuantity().getId()})}">Редактировать средство измерения</a>
-                </th>
-            </tr>
+                <tr>
+                    <th colspan="5">
+                        Датчик<br>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/admin/editSensor/{id}(id=${sensor.getId()})}">Редактировать датчик</a>
+                    </th>
+                    <th th:if="${sensor.getPhysicalQuantity()}" colspan="3">
+                        Физическая величина<br>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/admin/editPhysicalQuantity/{id}(id=${sensor.getPhysicalQuantity().getId()})}">Редактировать физическую величину</a>
+
+                    </th>
+                </tr>
+                <tr>
+                    <th>Название</th>
+                    <th>Режим (сроки) измерения</th>
+                    <th>Обозначение в базе данных</th>
+                    <th>Таблица в базе данных</th>
+                    <th>Имя базы данных</th>
+                    <span th:if="${sensor.getPhysicalQuantity()}">
+                        <th>Название</th>
+                        <th>Обозначение</th>
+                        <th>Единица измерения</th>
+                    </span>
+
+                </tr>
             </thead>
             <tbody>
                 <tr>
                     <td th:text="${sensor.getName()}"></td>
                     <td th:text="${sensor.getMeasurement_mode()}"></td>
-                    <td th:text="${sensor.getSensor_num()}"></td>
+                    <td th:text="${sensor.getSensor_db_key()}"></td>
                     <td th:text="${sensor.getSensor_table()}"></td>
                     <td th:text="${sensor.getSensor_DB()}"></td>
-
-                    <td th:text="${sensor.getPhysicalQuantity().getName()}"></td>
-                    <td th:text="${sensor.getPhysicalQuantity().getDesignation()}"></td>
-                    <td th:text="${sensor.getPhysicalQuantity().getUnit()}"></td>
+                    <span th:if="${sensor.getPhysicalQuantity()}">
+                        <td th:text="${sensor.getPhysicalQuantity().getName()}"></td>
+                        <td th:text="${sensor.getPhysicalQuantity().getDesignation()}"></td>
+                        <td th:text="${sensor.getPhysicalQuantity().getUnit()}"></td>
+                    </span>
                 </tr>
             </tbody>
         </table>
