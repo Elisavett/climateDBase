@@ -5,17 +5,20 @@ import net.company.orders.model.Entities.MeasuringInstrument;
 import net.company.orders.model.Entities.ObservationPoint;
 import net.company.orders.model.Entities.Sensor;
 import net.company.orders.model.Entities.PhysicalQuantity;
-import net.company.orders.model.TemperatureFromBase;
+import net.company.orders.model.ValuesFromBase;
 import net.company.orders.model.ViewModel;
 import net.company.orders.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SiteController {
@@ -25,15 +28,13 @@ public class SiteController {
     private SensorService sensorService;
     private PhysicalQuantityService physicalQuantityService;
     private MeasuringInstrumentService measuringInstrumentService;
-    private DbService dbService;
 
     @Autowired
-    SiteController(MeasuringInstrumentService measuringInstrumentService, PhysicalQuantityService physicalQuantityService, ObservationPointService observationPointService, SensorService sensorService, DbService dbService){
+    SiteController(MeasuringInstrumentService measuringInstrumentService, PhysicalQuantityService physicalQuantityService, ObservationPointService observationPointService, SensorService sensorService){
         this.observationPointService = observationPointService;
         this.sensorService = sensorService;
         this.physicalQuantityService = physicalQuantityService;
         this.measuringInstrumentService = measuringInstrumentService;
-        this.dbService = dbService;
     }
 
     @GetMapping("/")
@@ -41,7 +42,7 @@ public class SiteController {
         if(physicalQuantityId == null) physicalQuantityId = 1L;
         PhysicalQuantity physicalQuantity = physicalQuantityService.findById(physicalQuantityId);
         model.addAttribute("physicalQuantities", physicalQuantityService.findAll());
-        List<TemperatureFromBase> obsPointValues = DataBaseManager.getDbData(physicalQuantity);
+        List<ValuesFromBase> obsPointValues = DataBaseManager.getDbData(physicalQuantity);
         model.addAttribute("json", observationPointService.getJsonCoordinate(obsPointValues));
         return "index";
     }
@@ -71,6 +72,8 @@ public class SiteController {
         Sensor sensor = sensorService.findById(id);
         ViewModel observationPoint = observationPointService.findById(obsPointId);
         ViewModel measuringInstrument = measuringInstrumentService.findById(measurInstrId);
+        Map<Date, Double> chartData = DataBaseManager.countWeekTemperatures(3600, sensor);
+        model.addAttribute("chartData2002", chartData);
         model.addAttribute("sensor", sensor);
         model.addAttribute("observationPoint", observationPoint);
         model.addAttribute("measuringInstrument", measuringInstrument);
@@ -88,6 +91,11 @@ public class SiteController {
         ObservationPoint observationPoint = observationPointService.findById(id);
         model.addAttribute("observationPoint", observationPoint);
         return "physicalQuantityForObsPoint";
+    }
+    @GetMapping("/showData")
+    public ResponseEntity<Map<Date, Double>> showData(@RequestParam(value = "period", required = false) String period, @RequestParam Long sensorId, Model model) {
+        Map<Date, Double> chartData = DataBaseManager.countWeekTemperatures(Integer.parseInt(period), sensorService.findById(sensorId));
+        return ResponseEntity.ok().body(chartData);
     }
 
 

@@ -3,9 +3,9 @@ package net.company.orders.model;
 import net.company.orders.model.Entities.ObservationPoint;
 
 
-public class TemperatureFromBase{
+public class ValuesFromBase {
 
-        public TemperatureFromBase(ObservationPoint observationPoint){
+        public ValuesFromBase(ObservationPoint observationPoint){
                 this.observationPoint = observationPoint;
         }
 
