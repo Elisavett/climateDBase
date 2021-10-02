@@ -65,10 +65,9 @@ public class DataBaseManager {
         return obsPointValues;
     }
 
-    public static Map<Date, Double> countWeekTemperatures(int period, Sensor sensor) {
+    public static Map<Date, Double> countWeekTemperatures(int period, long periodStart, long periodEnd, Sensor sensor) {
         Map<Date, Double> map2002 = new TreeMap<>();
-        //Время сейчас отнимает количество секунд в неделе
-        long ut = (Instant.now().getEpochSecond() - 604800L);
+
         String dbName = sensor.getSensor_DB();
         int connectionNum;
         if (dbName.equals("apik3")) connectionNum = 1;
@@ -80,7 +79,9 @@ public class DataBaseManager {
                 PreparedStatement statement = conn.prepareStatement(
                         "SELECT t.time, `" + sensor.getSensor_db_key() +
                                 "` FROM `" + sensor.getSensor_table() +
-                                "` as t where t.time >= "+ ut +" and MOD(t.time, " + period + ") = 0" +
+                                "` as t where t.time >= "+ periodStart +
+                                " and t.time <= " + periodEnd +
+                                " and MOD(t.time, " + period + ") = 0" +
                                 " order by t.time desc");
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {

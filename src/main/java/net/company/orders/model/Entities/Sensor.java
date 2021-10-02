@@ -2,10 +2,11 @@ package net.company.orders.model.Entities;
 
 
 import net.company.orders.model.ViewModel;
-import org.hibernate.integrator.spi.ServiceContributingIntegrator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.Date;
+import java.util.Map;
 
 @Entity
 @Table(name = "sensor")
@@ -29,6 +30,8 @@ public class Sensor extends ViewModel {
     @JoinColumn(name="measuring_instrument_id")
     private MeasuringInstrument measuringInstrument;
 
+    @Transient
+    public static Map<Date, Double> chartData;
 
     public PhysicalQuantity getPhysicalQuantity() {
         return physicalQuantity;

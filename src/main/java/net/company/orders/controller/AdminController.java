@@ -3,6 +3,9 @@ package net.company.orders.controller;
 import net.company.orders.model.Entities.*;
 import net.company.orders.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,8 +13,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.text.SimpleDateFormat;
 
 @Controller
 @RequestMapping("/admin")
@@ -256,5 +263,18 @@ public class AdminController {
         observationPoint.setId(observationPoint_id);
         observationPointService.saveObservationPoint(observationPoint);
         return ("redirect:/getObservationPoints");
+    }
+
+    @RequestMapping("/downloadSensorData")
+    @PreAuthorize("hasAuthority('admin')")
+    public ResponseEntity<String> downloadSensorData(@RequestParam Long sensorId) {
+
+        MediaType mediaType = new MediaType("text", "plain", Charset.defaultCharset());
+        return ResponseEntity.ok()
+                // Content-Disposition
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=SensorData.txt")
+                // Content-Type
+                .contentType(mediaType)
+                .body(sensorService.getFileData(sensorId));
     }
 }
